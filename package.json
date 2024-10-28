@@ -2,7 +2,9 @@
   "dependencies": {
     "@types/snoowrap": "^1.16.1",
     "dotenv": "^16.4.5",
-    "snoowrap": "^1.23.0"
+    "openai": "^4.68.4",
+    "snoowrap": "^1.23.0",
+    "zod": "^3.23.8"
   },
   "scripts": {
     "test:reddit": "ts-node src/lib/test-reddit.ts"

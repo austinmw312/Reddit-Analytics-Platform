@@ -32,13 +32,13 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, and Supabase.
 
 4. Analyze reddit posts data in "Themes" tab
 
-   1. For each post, we should send post data to OpenAI API to analyze the post and categorize it according to the themes.
+   1. For each post, we should send post data to OpenAI API and use structured output to analyze the post and categorize it according to the themes.
    2. We will use the following categories: Solution Requests, Pain Points, Ideas, Advice Requests, and Other.
       1. Solution Requests: Posts asking for solutions to problems.
       2. Pain Points: Posts expressing pain points or problems.
       3. Ideas: Posts introducing new ideas or concepts, such as new products, services, or startup ideas.
       4. Advice Requests: Posts asking for advice on topics.
-      5. Other: Posts that don't fit into the other categories.
+      5. Other: Posts that don't fit into the other categories. Only put posts that don't fit into the other categories here.
    3. This process needs to be ran concurrently for all posts.
    4. In the "Themes" tab, display each category as a card with the following information: Category name, number of posts.
    5. If the user clicks on a category card, it should open a side panel that shows all the posts belonging to that category.
@@ -118,6 +118,83 @@ export async function fetchRecentPosts(subredditName: string): Promise<RedditPos
     throw error;
   }
 }
+```
+
+## Documentation of how to use OpenAI API to analyze reddit posts data:
+
+```
+import OpenAI from 'openai';
+import { z } from 'zod';
+import { zodResponseFormat } from 'openai/helpers/zod';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Zod schema for post category analysis
+const PostCategorySchema = z.object({
+  isSolutionRequest: z.boolean().describe('Posts asking for solutions to problems'),
+  isPainPoint: z.boolean().describe('Posts expressing pain points or problems'),
+  isIdea: z.boolean().describe('Posts introducing new ideas or concepts, including startup ideas'),
+  isAdviceRequest: z.boolean().describe('Posts asking for advice'),
+  isOther: z.boolean().describe('Only true if post does not fit into any other category'),
+});
+
+// TypeScript type derived from the Zod schema
+export type PostCategoryAnalysis = z.infer<typeof PostCategorySchema>;
+
+export interface RedditPostContent {
+  title: string;
+  content: string;
+}
+
+export async function categorizePost(post: RedditPostContent): Promise<PostCategoryAnalysis> {
+  try {
+    const completion = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a post categorization assistant. Analyze Reddit posts and categorize them according to the specified categories."
+        },
+        {
+          role: "user",
+          content: `Analyze this Reddit post and categorize it:
+
+Title: ${post.title}
+Content: ${post.content}`
+        }
+      ],
+      temperature: 0.1,
+      response_format: zodResponseFormat(PostCategorySchema, "post_category_analysis"),
+    });
+
+    const result = completion.choices[0].message.parsed;
+    if (!result) {
+      throw new Error('Failed to parse post categorization result');
+    }
+
+    // If no other categories are true, set isOther to true
+    if (!result.isSolutionRequest &&
+        !result.isPainPoint &&
+        !result.isIdea &&
+        !result.isAdviceRequest) {
+      result.isOther = true;
+    } else {
+      result.isOther = false;
+    }
+
+    return result;
+
+  } catch (error) {
+    console.error('Error categorizing post:', error);
+    throw error;
+  }
+}
+
 ```
 
 # Current File Structure
