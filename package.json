@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@types/snoowrap": "^1.16.1",
+    "dotenv": "^16.4.5",
+    "snoowrap": "^1.23.0"
+  },
+  "scripts": {
+    "test:reddit": "ts-node src/lib/test-reddit.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
