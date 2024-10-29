@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import type { Subreddit } from "@/types/subreddit"
 
@@ -80,7 +81,32 @@ export default function SubredditPage() {
         <p className="text-muted-foreground">{subreddit.description}</p>
       </div>
 
-      {/* Tabs will be added here in the next step */}
+      <Tabs defaultValue="posts" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="posts">Top Posts</TabsTrigger>
+          <TabsTrigger value="themes">Themes</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="posts" className="space-y-4">
+          <div className="rounded-lg border">
+            <div className="p-4">
+              <p className="text-sm text-muted-foreground">
+                Top posts from the past 24 hours will appear here.
+              </p>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="themes" className="space-y-4">
+          <div className="rounded-lg border">
+            <div className="p-4">
+              <p className="text-sm text-muted-foreground">
+                Theme categories and their associated posts will appear here.
+              </p>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </main>
   )
 } 
