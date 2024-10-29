@@ -50,10 +50,6 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, and Supabase.
 
 # Documentation
 
-- [Snoowrap](https://github.com/not-an-aardvark/snoowrap)
-- [OpenAI](https://platform.openai.com/docs/api-reference/chat/create)
-- [Supabase](https://supabase.com/docs)
-
 ## Documentation of how to use Snoowrap to fetch reddit posts data:
 
 CODE EXAMPLE:
@@ -121,6 +117,8 @@ export async function fetchRecentPosts(subredditName: string): Promise<RedditPos
 ```
 
 ## Documentation of how to use OpenAI API to analyze reddit posts data:
+
+CODE EXAMPLE:
 
 ```
 import OpenAI from 'openai';
@@ -197,4 +195,39 @@ Content: ${post.content}`
 
 ```
 
+EXAMPLE OUTPUT:
+
+```
+{
+  "isSolutionRequest": true,
+  "isPainPoint": false,
+  "isIdea": false,
+  "isAdviceRequest": true,
+  "isOther": false
+}
+```
+
 # Current File Structure
+
+reddit-analytics
+├── README.md
+├── app
+│ ├── favicon.ico
+│ ├── fonts
+│ ├── globals.css
+│ ├── layout.tsx
+│ └── page.tsx
+├── components
+│ └── ui
+├── components.json
+├── instructions
+│ └── instructions.md
+├── lib
+│ └── utils.ts
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.ts
+└── tsconfig.json
