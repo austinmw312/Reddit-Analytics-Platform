@@ -4,11 +4,13 @@ import { useState, useEffect } from "react"
 import { SubredditCard } from "@/components/subreddit-card"
 import { AddSubredditModal } from "@/components/add-subreddit-modal"
 import type { Subreddit } from "@/types/subreddit"
+import { useToast } from "@/hooks/use-toast"
 
 const STORAGE_KEY = 'reddit-analytics-subreddits'
 
 export default function Home() {
   const [subreddits, setSubreddits] = useState<Subreddit[]>([])
+  const { toast } = useToast()
 
   // Load subreddits from localStorage on initial render
   useEffect(() => {
@@ -35,6 +37,17 @@ export default function Home() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSubreddits))
   }
 
+  const handleSubredditRemove = (id: string) => {
+    const updatedSubreddits = subreddits.filter(sub => sub.id !== id)
+    setSubreddits(updatedSubreddits)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSubreddits))
+    
+    toast({
+      title: "Subreddit removed",
+      description: "The subreddit has been removed from your list",
+    })
+  }
+
   return (
     <main className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
@@ -44,7 +57,11 @@ export default function Home() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {subreddits.map((subreddit) => (
-          <SubredditCard key={subreddit.id} subreddit={subreddit} />
+          <SubredditCard 
+            key={subreddit.id} 
+            subreddit={subreddit} 
+            onRemove={handleSubredditRemove}
+          />
         ))}
       </div>
     </main>

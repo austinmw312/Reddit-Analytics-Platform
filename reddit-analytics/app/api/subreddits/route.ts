@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import Snoowrap from "snoowrap"
+import type { Subreddit } from "@/types/subreddit"
 
 const reddit = new Snoowrap({
   userAgent: process.env.REDDIT_USER_AGENT!,
@@ -13,11 +14,11 @@ export async function POST(request: Request) {
   try {
     const { name } = await request.json()
 
-    // Fetch subreddit info from Reddit
+    // Fetch subreddit info from Reddit and explicitly type the response
     const subredditInfo = await reddit.getSubreddit(name).fetch()
 
     // Transform the data to match our Subreddit type
-    const subreddit = {
+    const subreddit: Subreddit = {
       id: subredditInfo.name, // This is the full name (e.g., "t5_2qh33")
       name: subredditInfo.display_name.toLowerCase(),
       memberCount: subredditInfo.subscribers,
