@@ -173,14 +173,16 @@ export default function SubredditPage() {
                             <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
                           </div>
                           
-                          {isExpanded && post.content && (
+                          {isExpanded && (
                             <div 
                               className="mt-3 pt-3 border-t text-sm"
                               onClick={e => e.stopPropagation()}
                             >
-                              <div className="whitespace-pre-wrap mb-2">
-                                {post.content}
-                              </div>
+                              {post.content && (
+                                <div className="whitespace-pre-wrap mb-2">
+                                  {post.content}
+                                </div>
+                              )}
                               <a
                                 href={post.url}
                                 target="_blank"
