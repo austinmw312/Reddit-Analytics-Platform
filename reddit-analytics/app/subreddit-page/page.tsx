@@ -11,6 +11,10 @@ import type { Subreddit } from "@/types/subreddit"
 import type { RedditPost } from "@/types/reddit-post"
 import { useToast } from "@/hooks/use-toast"
 import { format } from "date-fns"
+import { analyzePosts } from "@/lib/analyze-posts"
+import type { PostCategoryAnalysis } from "@/types/post-category"
+import type { ThemeCategory } from "@/types/theme"
+import { ThemeCard } from "@/components/theme-card"
 
 const STORAGE_KEY = 'reddit-analytics-subreddits'
 
@@ -23,6 +27,8 @@ export default function SubredditPage() {
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const { toast } = useToast()
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set())
+  const [postAnalysis, setPostAnalysis] = useState<Map<string, PostCategoryAnalysis>>(new Map())
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   // Load subreddit data
   useEffect(() => {
@@ -76,6 +82,81 @@ export default function SubredditPage() {
 
     fetchPosts()
   }, [subreddit, toast])
+
+  // Add new useEffect for post analysis
+  useEffect(() => {
+    if (!posts.length) return
+
+    const analyzeAllPosts = async () => {
+      setIsAnalyzing(true)
+      try {
+        const analysis = await analyzePosts(posts)
+        setPostAnalysis(analysis)
+      } catch (error) {
+        console.error('Error analyzing posts:', error)
+        toast({
+          title: "Error",
+          description: "Failed to analyze posts. Please try again later.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsAnalyzing(false)
+      }
+    }
+
+    analyzeAllPosts()
+  }, [posts, toast])
+
+  // Function to organize posts into themes
+  const getThemeCategories = (): ThemeCategory[] => {
+    const themes: ThemeCategory[] = [
+      {
+        name: "Solution Requests",
+        description: "Posts asking for solutions to problems",
+        posts: [],
+      },
+      {
+        name: "Pain Points",
+        description: "Posts expressing pain points or problems",
+        posts: [],
+      },
+      {
+        name: "Ideas",
+        description: "Posts introducing new ideas or concepts",
+        posts: [],
+      },
+      {
+        name: "Advice Requests",
+        description: "Posts asking for advice",
+        posts: [],
+      },
+      {
+        name: "Other",
+        description: "Posts that don't fit into other categories",
+        posts: [],
+      },
+    ]
+
+    // Categorize each post
+    posts.forEach(post => {
+      const analysis = postAnalysis.get(post.id)
+      if (!analysis) return
+
+      if (analysis.isSolutionRequest) themes[0].posts.push(post)
+      if (analysis.isPainPoint) themes[1].posts.push(post)
+      if (analysis.isIdea) themes[2].posts.push(post)
+      if (analysis.isAdviceRequest) themes[3].posts.push(post)
+      if (analysis.isOther) themes[4].posts.push(post)
+    })
+
+    // Sort posts within each theme by score
+    themes.forEach(theme => {
+      theme.posts.sort((a, b) => b.score - a.score)
+    })
+
+    // Only return themes that have posts
+    return themes.filter(theme => theme.posts.length > 0)
+  }
 
   // Sort posts by score in descending order
   const sortedPosts = [...posts].sort((a, b) => b.score - a.score)
@@ -209,13 +290,19 @@ export default function SubredditPage() {
         </TabsContent>
         
         <TabsContent value="themes" className="space-y-4">
-          <div className="rounded-lg border">
-            <div className="p-4">
-              <p className="text-sm text-muted-foreground">
-                Theme categories and their associated posts will appear here.
-              </p>
+          {isAnalyzing ? (
+            <div className="space-y-4">
+              <div className="animate-pulse h-24 bg-muted rounded" />
+              <div className="animate-pulse h-24 bg-muted rounded" />
+              <div className="animate-pulse h-24 bg-muted rounded" />
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {getThemeCategories().map(theme => (
+                <ThemeCard key={theme.name} theme={theme} />
+              ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </main>
