@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import type { Subreddit } from "@/types/subreddit"
+import type { RedditPost } from "@/types/reddit-post"
+import { useToast } from "@/hooks/use-toast"
+import { format } from "date-fns"
 
 const STORAGE_KEY = 'reddit-analytics-subreddits'
 
@@ -15,12 +18,15 @@ export default function SubredditPage() {
   const searchParams = useSearchParams()
   const subredditName = searchParams.get('name')
   const [subreddit, setSubreddit] = useState<Subreddit | null>(null)
+  const [posts, setPosts] = useState<RedditPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false)
+  const { toast } = useToast()
 
+  // Load subreddit data
   useEffect(() => {
     if (!subredditName) return
 
-    // Get subreddit from localStorage
     const savedSubreddits = localStorage.getItem(STORAGE_KEY)
     if (savedSubreddits) {
       try {
@@ -36,6 +42,42 @@ export default function SubredditPage() {
     }
     setIsLoading(false)
   }, [subredditName])
+
+  // Fetch posts when subreddit changes
+  useEffect(() => {
+    if (!subreddit) return
+
+    const fetchPosts = async () => {
+      setIsLoadingPosts(true)
+      try {
+        const response = await fetch(`/api/posts?subreddit=${subreddit.name}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts')
+        }
+        const data = await response.json()
+        // Convert string dates to Date objects
+        const postsWithDates = data.map((post: any) => ({
+          ...post,
+          createdAt: new Date(post.createdAt)
+        }))
+        setPosts(postsWithDates)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+        toast({
+          title: "Error",
+          description: "Failed to fetch posts. Please try again later.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoadingPosts(false)
+      }
+    }
+
+    fetchPosts()
+  }, [subreddit, toast])
+
+  // Sort posts by score in descending order
+  const sortedPosts = [...posts].sort((a, b) => b.score - a.score)
 
   if (isLoading) {
     return (
@@ -90,9 +132,32 @@ export default function SubredditPage() {
         <TabsContent value="posts" className="space-y-4">
           <div className="rounded-lg border">
             <div className="p-4">
-              <p className="text-sm text-muted-foreground">
-                Top posts from the past 24 hours will appear here.
-              </p>
+              {isLoadingPosts ? (
+                <div className="space-y-4">
+                  <div className="animate-pulse h-4 bg-muted rounded w-3/4" />
+                  <div className="animate-pulse h-4 bg-muted rounded w-1/2" />
+                  <div className="animate-pulse h-4 bg-muted rounded w-2/3" />
+                </div>
+              ) : sortedPosts.length > 0 ? (
+                <div className="space-y-2">
+                  {sortedPosts.map(post => (
+                    <div key={post.id} className="p-2 hover:bg-muted rounded-lg">
+                      <h3 className="font-medium">{post.title}</h3>
+                      <div className="text-sm text-muted-foreground flex items-center gap-2">
+                        <span>{post.score} upvotes</span>
+                        <span>•</span>
+                        <span>{post.numComments} comments</span>
+                        <span>•</span>
+                        <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No posts found from the past 24 hours.
+                </p>
+              )}
             </div>
           </div>
         </TabsContent>
