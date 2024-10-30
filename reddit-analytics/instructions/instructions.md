@@ -103,27 +103,45 @@ You are building a Reddit analytics platform where users can view analytics on d
 reddit-analytics
 ├── README.md
 ├── app
+│   ├── api
+│   │   ├── analyze
+│   │   ├── posts
+│   │   └── subreddits
 │   ├── favicon.ico
+│   ├── fonts
+│   │   ├── GeistMonoVF.woff
+│   │   └── GeistVF.woff
 │   ├── globals.css
 │   ├── layout.tsx
-│   ├── page.tsx             // Home page with subreddit list and "Add Subreddit" modal
-│   ├── [subreddit]
-│   │   └── page.tsx         // Subreddit page with "Top Posts" and "Themes" tabs
-│   └── api
-│       ├── fetchPosts.ts    // API route to fetch Reddit posts using Snoowrap
-│       └── analyzePosts.ts  // API route to analyze posts using OpenAI API
+│   ├── page.tsx
+│   └── subreddit-page
+│       ├── not-found.tsx
+│       └── page.tsx
 ├── components
-│   └── ui                   // UI components (if needed)
+│   ├── add-subreddit-modal.tsx
+│   ├── category-label.tsx
+│   ├── subreddit-card.tsx
+│   └── theme-card.tsx
+├── components.json
+├── hooks
+│   └── use-toast.ts
+├── instructions
+│   └── instructions.md
 ├── lib
-│   ├── supabaseClient.ts    // Supabase client initialization
-│   ├── snoowrapClient.ts    // Snoowrap client initialization
-│   └── openaiClient.ts      // OpenAI client initialization
+│   ├── analyze-posts.ts
+│   └── utils.ts
 ├── next-env.d.ts
 ├── next.config.mjs
+├── package-lock.json
 ├── package.json
 ├── postcss.config.mjs
 ├── tailwind.config.ts
-└── tsconfig.json
+├── tsconfig.json
+└── types
+    ├── post-category.ts
+    ├── reddit-post.ts
+    ├── subreddit.ts
+    └── theme.ts
 ```
 
 **Notes**:
