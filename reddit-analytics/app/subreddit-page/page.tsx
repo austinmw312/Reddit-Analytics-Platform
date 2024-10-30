@@ -15,6 +15,7 @@ import { analyzePosts } from "@/lib/analyze-posts"
 import type { PostCategoryAnalysis } from "@/types/post-category"
 import type { ThemeCategory } from "@/types/theme"
 import { ThemeCard } from "@/components/theme-card"
+import { CategoryLabel } from "@/components/category-label"
 
 const STORAGE_KEY = 'reddit-analytics-subreddits'
 
@@ -236,6 +237,8 @@ export default function SubredditPage() {
                 <div className="space-y-2">
                   {sortedPosts.map(post => {
                     const isExpanded = expandedPosts.has(post.id)
+                    const analysis = postAnalysis.get(post.id)
+                    
                     return (
                       <div 
                         key={post.id} 
@@ -245,13 +248,27 @@ export default function SubredditPage() {
                           className="p-3 cursor-pointer"
                           onClick={() => togglePost(post.id)}
                         >
-                          <h3 className="font-medium">{post.title}</h3>
-                          <div className="text-sm text-muted-foreground flex items-center gap-2">
-                            <span>{post.score} upvotes</span>
-                            <span>•</span>
-                            <span>{post.numComments} comments</span>
-                            <span>•</span>
-                            <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <h3 className="font-medium">{post.title}</h3>
+                              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <span>{post.score} upvotes</span>
+                                <span>•</span>
+                                <span>{post.numComments} comments</span>
+                                <span>•</span>
+                                <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                              </div>
+                            </div>
+                            
+                            {analysis && (
+                              <div className="flex flex-wrap gap-1 items-start mt-1">
+                                {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
+                                {analysis.isPainPoint && <CategoryLabel category="pain" />}
+                                {analysis.isIdea && <CategoryLabel category="idea" />}
+                                {analysis.isAdviceRequest && <CategoryLabel category="advice" />}
+                                {analysis.isOther && <CategoryLabel category="other" />}
+                              </div>
+                            )}
                           </div>
                           
                           {isExpanded && (
