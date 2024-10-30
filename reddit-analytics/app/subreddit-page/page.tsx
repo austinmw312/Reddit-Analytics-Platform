@@ -3,7 +3,7 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
@@ -22,6 +22,7 @@ export default function SubredditPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingPosts, setIsLoadingPosts] = useState(false)
   const { toast } = useToast()
+  const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set())
 
   // Load subreddit data
   useEffect(() => {
@@ -78,6 +79,18 @@ export default function SubredditPage() {
 
   // Sort posts by score in descending order
   const sortedPosts = [...posts].sort((a, b) => b.score - a.score)
+
+  const togglePost = (postId: string) => {
+    setExpandedPosts(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(postId)) {
+        newSet.delete(postId)
+      } else {
+        newSet.add(postId)
+      }
+      return newSet
+    })
+  }
 
   if (isLoading) {
     return (
@@ -140,18 +153,49 @@ export default function SubredditPage() {
                 </div>
               ) : sortedPosts.length > 0 ? (
                 <div className="space-y-2">
-                  {sortedPosts.map(post => (
-                    <div key={post.id} className="p-2 hover:bg-muted rounded-lg">
-                      <h3 className="font-medium">{post.title}</h3>
-                      <div className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span>{post.score} upvotes</span>
-                        <span>•</span>
-                        <span>{post.numComments} comments</span>
-                        <span>•</span>
-                        <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                  {sortedPosts.map(post => {
+                    const isExpanded = expandedPosts.has(post.id)
+                    return (
+                      <div 
+                        key={post.id} 
+                        className="rounded-lg border border-transparent hover:border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <div 
+                          className="p-3 cursor-pointer"
+                          onClick={() => togglePost(post.id)}
+                        >
+                          <h3 className="font-medium">{post.title}</h3>
+                          <div className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span>{post.score} upvotes</span>
+                            <span>•</span>
+                            <span>{post.numComments} comments</span>
+                            <span>•</span>
+                            <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                          </div>
+                          
+                          {isExpanded && post.content && (
+                            <div 
+                              className="mt-3 pt-3 border-t text-sm"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <div className="whitespace-pre-wrap mb-2">
+                                {post.content}
+                              </div>
+                              <a
+                                href={post.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                Open in Reddit
+                              </a>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
