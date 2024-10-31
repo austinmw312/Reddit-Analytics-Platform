@@ -109,6 +109,7 @@ export default function SubredditPage() {
       try {
         const totalPosts = posts.length
         const analysis = new Map<string, PostCategoryAnalysis>()
+        let highestProgress = 0
         
         // Analyze posts in batches of 5 to show progress
         for (let i = 0; i < posts.length; i += 5) {
@@ -120,9 +121,10 @@ export default function SubredditPage() {
             analysis.set(key, value)
           })
           
-          // Update progress
-          const progress = Math.min(((i + batch.length) / totalPosts) * 100, 100)
-          setAnalysisProgress(progress)
+          // Update progress, but never decrease it
+          const currentProgress = Math.min(((i + batch.length) / totalPosts) * 100, 100)
+          highestProgress = Math.max(highestProgress, currentProgress)
+          setAnalysisProgress(highestProgress)
         }
         
         setPostAnalysis(analysis)
