@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { AddSubredditModal } from "@/components/add-subreddit-modal"
 import { SubredditCard } from "@/components/subreddit-card"
+import { AddSubredditCard } from "@/components/add-subreddit-card"
+import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { Subreddit } from "@/types/subreddit"
 import { getLocalSubreddits, addLocalSubreddit, removeLocalSubreddit } from "@/lib/local-subreddits"
 
@@ -35,7 +37,7 @@ export default function Home() {
 
   const handleSubredditAdded = (newSubreddit: Subreddit) => {
     addLocalSubreddit(newSubreddit.name)
-    setSubreddits(prev => [newSubreddit, ...prev])
+    setSubreddits(prev => [...prev, newSubreddit])
   }
 
   if (loading) {
@@ -44,9 +46,9 @@ export default function Home() {
 
   return (
     <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Reddit Analytics</h1>
-        <AddSubredditModal onSubredditAdded={handleSubredditAdded} />
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold">Reddit Market Insights</h1>
+        <p className="text-gray-600 mt-2">Choose a subreddit to identify solution requests, pain points, and more.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {subreddits.map((subreddit) => (
@@ -59,6 +61,14 @@ export default function Home() {
             }}
           />
         ))}
+        <AddSubredditCard>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Subreddit</DialogTitle>
+            </DialogHeader>
+            <AddSubredditModal onSubredditAdded={handleSubredditAdded} />
+          </DialogContent>
+        </AddSubredditCard>
       </div>
     </main>
   )

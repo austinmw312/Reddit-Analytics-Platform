@@ -21,7 +21,7 @@ export function getLocalSubreddits(): string[] {
       'webdev'
     ].map((name, index) => ({
       name,
-      addedAt: baseTime - ((4 - index) * 1000) // Earlier items will appear later in the list
+      addedAt: baseTime + (index * 1000) // Changed to make earlier items appear first
     }))
     localStorage.setItem(LOCAL_SUBREDDITS_KEY, JSON.stringify(defaults))
     return defaults.map(s => s.name)
@@ -35,15 +35,15 @@ export function getLocalSubreddits(): string[] {
       const baseTime = Date.now()
       const updatedSubreddits: LocalSubreddit[] = subreddits.map((name, index) => ({
         name,
-        addedAt: baseTime - ((subreddits.length - 1 - index) * 1000)
+        addedAt: baseTime + (index * 1000) // Changed to make earlier items appear first
       }))
       localStorage.setItem(LOCAL_SUBREDDITS_KEY, JSON.stringify(updatedSubreddits))
       return updatedSubreddits.map(s => s.name)
     }
     
-    // Sort by addedAt in descending order (most recent first)
+    // Sort by addedAt in ascending order (oldest first)
     return subreddits
-      .sort((a, b) => b.addedAt - a.addedAt)
+      .sort((a, b) => a.addedAt - b.addedAt)
       .map(s => s.name)
   } catch (error) {
     // If there's any error parsing, reset to defaults
