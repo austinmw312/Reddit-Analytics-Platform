@@ -7,6 +7,7 @@ import { AddSubredditCard } from "@/components/add-subreddit-card"
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { Subreddit } from "@/types/subreddit"
 import { getLocalSubreddits, addLocalSubreddit, removeLocalSubreddit } from "@/lib/local-subreddits"
+import { LoadingScreen } from "@/components/loading-screen"
 
 export default function Home() {
   const [subreddits, setSubreddits] = useState<Subreddit[]>([])
@@ -41,7 +42,7 @@ export default function Home() {
   }
 
   if (loading) {
-    return <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">Loading...</div>
+    return <LoadingScreen />
   }
 
   return (

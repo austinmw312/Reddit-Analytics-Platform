@@ -17,6 +17,8 @@ import type { ThemeCategory } from "@/types/theme"
 import { ThemeCard } from "@/components/theme-card"
 import { CategoryLabel } from "@/components/category-label"
 import { getLocalSubreddits } from "@/lib/local-subreddits"
+import { LoadingScreen } from "@/components/loading-screen"
+import { Progress } from "@/components/ui/progress"
 
 export default function SubredditPage() {
   const searchParams = useSearchParams()
@@ -29,6 +31,7 @@ export default function SubredditPage() {
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set())
   const [postAnalysis, setPostAnalysis] = useState<Map<string, PostCategoryAnalysis>>(new Map())
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisProgress, setAnalysisProgress] = useState(0)
 
   // Load subreddit data
   useEffect(() => {
@@ -102,8 +105,26 @@ export default function SubredditPage() {
 
     const analyzeAllPosts = async () => {
       setIsAnalyzing(true)
+      setAnalysisProgress(0)
       try {
-        const analysis = await analyzePosts(posts)
+        const totalPosts = posts.length
+        const analysis = new Map<string, PostCategoryAnalysis>()
+        
+        // Analyze posts in batches of 5 to show progress
+        for (let i = 0; i < posts.length; i += 5) {
+          const batch = posts.slice(i, i + 5)
+          const batchAnalysis = await analyzePosts(batch)
+          
+          // Merge batch results into main analysis map
+          batchAnalysis.forEach((value, key) => {
+            analysis.set(key, value)
+          })
+          
+          // Update progress
+          const progress = Math.min(((i + batch.length) / totalPosts) * 100, 100)
+          setAnalysisProgress(progress)
+        }
+        
         setPostAnalysis(analysis)
       } catch (error) {
         console.error('Error analyzing posts:', error)
@@ -114,6 +135,7 @@ export default function SubredditPage() {
         })
       } finally {
         setIsAnalyzing(false)
+        setAnalysisProgress(100)
       }
     }
 
@@ -187,14 +209,7 @@ export default function SubredditPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse">
-          <div className="h-8 w-48 bg-muted rounded mb-4" />
-          <div className="h-4 w-full max-w-md bg-muted rounded" />
-        </div>
-      </div>
-    )
+    return <LoadingScreen />
   }
 
   if (!subreddit) {
@@ -237,6 +252,15 @@ export default function SubredditPage() {
         </TabsList>
         
         <TabsContent value="posts" className="space-y-4">
+          {isAnalyzing && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Analyzing posts...</span>
+                <span>{Math.round(analysisProgress)}%</span>
+              </div>
+              <Progress value={analysisProgress} />
+            </div>
+          )}
           <div className="rounded-lg border">
             <div className="p-4">
               {isLoadingPosts ? (
@@ -319,19 +343,20 @@ export default function SubredditPage() {
         </TabsContent>
         
         <TabsContent value="themes" className="space-y-4">
-          {isAnalyzing ? (
-            <div className="space-y-4">
-              <div className="animate-pulse h-24 bg-muted rounded" />
-              <div className="animate-pulse h-24 bg-muted rounded" />
-              <div className="animate-pulse h-24 bg-muted rounded" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {getThemeCategories().map(theme => (
-                <ThemeCard key={theme.name} theme={theme} />
-              ))}
+          {isAnalyzing && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Analyzing posts...</span>
+                <span>{Math.round(analysisProgress)}%</span>
+              </div>
+              <Progress value={analysisProgress} />
             </div>
           )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {getThemeCategories().map(theme => (
+              <ThemeCard key={theme.name} theme={theme} />
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     </main>
