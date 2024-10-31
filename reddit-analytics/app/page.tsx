@@ -39,11 +39,11 @@ export default function Home() {
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">Loading...</div>
   }
 
   return (
-    <main className="container py-10">
+    <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold">Reddit Analytics</h1>
         <AddSubredditModal onSubredditAdded={handleSubredditAdded} />
