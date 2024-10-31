@@ -16,8 +16,7 @@ import type { PostCategoryAnalysis } from "@/types/post-category"
 import type { ThemeCategory } from "@/types/theme"
 import { ThemeCard } from "@/components/theme-card"
 import { CategoryLabel } from "@/components/category-label"
-
-const STORAGE_KEY = 'reddit-analytics-subreddits'
+import { getLocalSubreddits } from "@/lib/local-subreddits"
 
 export default function SubredditPage() {
   const searchParams = useSearchParams()
@@ -35,20 +34,33 @@ export default function SubredditPage() {
   useEffect(() => {
     if (!subredditName) return
 
-    const savedSubreddits = localStorage.getItem(STORAGE_KEY)
-    if (savedSubreddits) {
+    // Fetch the subreddit data from the API
+    const fetchSubreddit = async () => {
       try {
-        const subreddits: Subreddit[] = JSON.parse(savedSubreddits).map((sub: any) => ({
-          ...sub,
-          createdAt: new Date(sub.createdAt)
-        }))
-        const found = subreddits.find(sub => sub.name.toLowerCase() === subredditName.toLowerCase())
-        setSubreddit(found || null)
+        const localSubreddits = getLocalSubreddits()
+        if (!localSubreddits.includes(subredditName.toLowerCase())) {
+          setSubreddit(null)
+          return
+        }
+
+        const response = await fetch(`/api/subreddits/defaults?subreddits=${subredditName}`)
+        if (!response.ok) throw new Error("Failed to fetch subreddit")
+        
+        const subreddits = await response.json()
+        if (subreddits.length > 0) {
+          setSubreddit(subreddits[0])
+        } else {
+          setSubreddit(null)
+        }
       } catch (error) {
         console.error('Error loading subreddit:', error)
+        setSubreddit(null)
+      } finally {
+        setIsLoading(false)
       }
     }
-    setIsLoading(false)
+
+    fetchSubreddit()
   }, [subredditName])
 
   // Fetch posts when subreddit changes

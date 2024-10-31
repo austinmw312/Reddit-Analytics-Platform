@@ -58,7 +58,7 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
         </div>
         <Input
           id="subredditName"
-          className="rounded-l-none"
+          className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
           placeholder="name"
           value={subredditName}
           onChange={(e) => setSubredditName(e.target.value)}
