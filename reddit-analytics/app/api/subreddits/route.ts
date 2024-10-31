@@ -59,8 +59,7 @@ export async function POST(request: Request) {
     const { data: savedSubreddit, error: upsertError } = await supabase
       .from('subreddits')
       .upsert(subredditData, {
-        onConflict: 'name',
-        returning: 'minimal'
+        onConflict: 'name'
       })
 
     if (upsertError) {
