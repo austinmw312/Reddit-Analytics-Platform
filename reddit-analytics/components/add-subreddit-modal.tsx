@@ -13,7 +13,7 @@ interface AddSubredditModalProps {
 
 export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) {
   const [open, setOpen] = useState(false)
-  const [url, setUrl] = useState("")
+  const [subredditName, setSubredditName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
@@ -22,12 +22,6 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
     setIsLoading(true)
 
     try {
-      // Extract subreddit name from URL
-      const subredditName = extractSubredditName(url)
-      if (!subredditName) {
-        throw new Error("Invalid subreddit URL")
-      }
-
       const response = await fetch("/api/subreddits", {
         method: "POST",
         headers: {
@@ -47,7 +41,7 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
         description: "Subreddit added successfully",
       })
 
-      setUrl("")
+      setSubredditName("")
       setOpen(false)
       onSubredditAdded(subreddit)
     } catch (error) {
@@ -74,13 +68,16 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
           <DialogTitle>Add New Subreddit</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="url">Subreddit URL</Label>
+          <div className="flex">
+            <div className="flex items-center bg-muted px-3 border border-r-0 border-input rounded-l-md">
+              r/
+            </div>
             <Input
-              id="url"
-              placeholder="https://reddit.com/r/subredditname"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              id="subredditName"
+              className="rounded-l-none"
+              placeholder="name"
+              value={subredditName}
+              onChange={(e) => setSubredditName(e.target.value)}
               required
             />
           </div>
@@ -92,18 +89,3 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
     </Dialog>
   )
 }
-
-function extractSubredditName(url: string): string | null {
-  try {
-    const urlObj = new URL(url)
-    const pathParts = urlObj.pathname.split('/')
-    // Find the part after /r/
-    const rIndex = pathParts.indexOf('r')
-    if (rIndex !== -1 && pathParts[rIndex + 1]) {
-      return pathParts[rIndex + 1]
-    }
-    return null
-  } catch {
-    return null
-  }
-} 
