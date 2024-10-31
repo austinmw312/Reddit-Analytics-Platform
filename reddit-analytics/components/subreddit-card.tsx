@@ -16,6 +16,9 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
     onRemove(subreddit.id)
   }
 
+  // Format member count with a fallback to 0 if undefined
+  const formattedMemberCount = (subreddit.memberCount ?? 0).toLocaleString()
+
   return (
     <Link href={`/subreddit-page?name=${encodeURIComponent(subreddit.name)}`}>
       <Card className="hover:bg-accent/50 transition-colors cursor-pointer group">
@@ -26,7 +29,7 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Users className="h-3 w-3" />
-                  {subreddit.memberCount.toLocaleString()}
+                  {formattedMemberCount}
                 </Badge>
                 <Button 
                   variant="ghost" 
