@@ -41,7 +41,7 @@ CREATE TABLE posts (
 -- Create post_analysis table
 CREATE TABLE post_analysis (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+    reddit_id TEXT UNIQUE NOT NULL,
     is_solution_request BOOLEAN,
     is_pain_point BOOLEAN,
     is_idea BOOLEAN,
@@ -54,4 +54,5 @@ CREATE TABLE post_analysis (
 CREATE INDEX idx_posts_subreddit_id ON posts(subreddit_id);
 CREATE INDEX idx_posts_retrieved_at ON posts(retrieved_at);
 CREATE INDEX idx_post_analysis_post_id ON post_analysis(post_id);
-CREATE INDEX idx_post_analysis_analyzed_at ON post_analysis(analyzed_at); 
+CREATE INDEX idx_post_analysis_analyzed_at ON post_analysis(analyzed_at);
+CREATE INDEX idx_post_analysis_reddit_id ON post_analysis(reddit_id); 
