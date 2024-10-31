@@ -43,53 +43,64 @@ export async function POST(request: Request) {
     }
 
     // If not found or stale, fetch from Reddit
-    const subredditInfo = await reddit.getSubreddit(subredditName).fetch()
+    try {
+      const subredditInfo = await reddit.getSubreddit(subredditName).fetch()
 
-    // Transform the data
-    const subredditData = {
-      name: subredditInfo.display_name.toLowerCase(),
-      member_count: subredditInfo.subscribers,
-      description: subredditInfo.public_description || subredditInfo.description,
-      url: `https://reddit.com/r/${subredditInfo.display_name}`,
-      created_at: new Date(),
-      updated_at: new Date()
+      // Transform the data
+      const subredditData = {
+        name: subredditInfo.display_name.toLowerCase(),
+        member_count: subredditInfo.subscribers,
+        description: subredditInfo.public_description || subredditInfo.description,
+        url: `https://reddit.com/r/${subredditInfo.display_name}`,
+        created_at: new Date(),
+        updated_at: new Date()
+      }
+
+      // Upsert the data to Supabase
+      const { data: savedSubreddit, error: upsertError } = await supabase
+        .from('subreddits')
+        .upsert(subredditData, {
+          onConflict: 'name'
+        })
+
+      if (upsertError) {
+        console.error("Error upserting to Supabase:", upsertError)
+        throw upsertError
+      }
+
+      // Fetch the saved data to get the UUID
+      const { data: newSubreddit, error: getError } = await supabase
+        .from('subreddits')
+        .select('*')
+        .eq('name', subredditName)
+        .single()
+
+      if (getError) {
+        console.error("Error fetching saved subreddit:", getError)
+        throw getError
+      }
+
+      // Return the data in the format expected by the frontend
+      const subreddit: Subreddit = {
+        id: newSubreddit.id,
+        name: newSubreddit.name,
+        memberCount: newSubreddit.member_count,
+        description: newSubreddit.description,
+        url: newSubreddit.url,
+        createdAt: new Date(newSubreddit.created_at)
+      }
+
+      return NextResponse.json(subreddit)
+    } catch (error: any) {
+      // Check for Snoowrap's specific error message format
+      if (error?.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { error: "This subreddit doesn't exist" },
+          { status: 404 }
+        )
+      }
+      throw error
     }
-
-    // Upsert the data to Supabase
-    const { data: savedSubreddit, error: upsertError } = await supabase
-      .from('subreddits')
-      .upsert(subredditData, {
-        onConflict: 'name'
-      })
-
-    if (upsertError) {
-      console.error("Error upserting to Supabase:", upsertError)
-      throw upsertError
-    }
-
-    // Fetch the saved data to get the UUID
-    const { data: newSubreddit, error: getError } = await supabase
-      .from('subreddits')
-      .select('*')
-      .eq('name', subredditName)
-      .single()
-
-    if (getError) {
-      console.error("Error fetching saved subreddit:", getError)
-      throw getError
-    }
-
-    // Return the data in the format expected by the frontend
-    const subreddit: Subreddit = {
-      id: newSubreddit.id,
-      name: newSubreddit.name,
-      memberCount: newSubreddit.member_count,
-      description: newSubreddit.description,
-      url: newSubreddit.url,
-      createdAt: new Date(newSubreddit.created_at)
-    }
-
-    return NextResponse.json(subreddit)
   } catch (error) {
     console.error("Error adding subreddit:", error)
     return NextResponse.json(

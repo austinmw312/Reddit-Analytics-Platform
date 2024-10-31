@@ -63,12 +63,17 @@ export default function Home() {
           />
         ))}
         <AddSubredditCard>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Subreddit</DialogTitle>
-            </DialogHeader>
-            <AddSubredditModal onSubredditAdded={handleSubredditAdded} />
-          </DialogContent>
+          {(setOpen) => (
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Subreddit</DialogTitle>
+              </DialogHeader>
+              <AddSubredditModal 
+                onSubredditAdded={handleSubredditAdded} 
+                setOpen={setOpen}
+              />
+            </DialogContent>
+          )}
         </AddSubredditCard>
       </div>
     </main>

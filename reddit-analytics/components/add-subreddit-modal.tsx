@@ -6,16 +6,19 @@ import type { Subreddit } from "@/types/subreddit"
 
 interface AddSubredditModalProps {
   onSubredditAdded: (subreddit: Subreddit) => void
+  setOpen: (open: boolean) => void
 }
 
-export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) {
+export function AddSubredditModal({ onSubredditAdded, setOpen }: AddSubredditModalProps) {
   const [subredditName, setSubredditName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
 
     try {
       const response = await fetch("/api/subreddits", {
@@ -26,11 +29,11 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
         body: JSON.stringify({ name: subredditName }),
       })
 
-      if (!response.ok) {
-        throw new Error("Failed to add subreddit")
-      }
+      const data = await response.json()
 
-      const subreddit = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to add subreddit")
+      }
 
       toast({
         title: "Success",
@@ -38,11 +41,14 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
       })
 
       setSubredditName("")
-      onSubredditAdded(subreddit)
+      onSubredditAdded(data)
+      setOpen(false)
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to add subreddit"
+      setError(message)
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add subreddit",
+        description: message,
         variant: "destructive",
       })
     } finally {
@@ -52,18 +58,23 @@ export function AddSubredditModal({ onSubredditAdded }: AddSubredditModalProps) 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex">
-        <div className="flex items-center bg-muted px-3 border border-r-0 border-input rounded-l-md">
-          r/
+      <div className="space-y-2">
+        <div className="flex">
+          <div className="flex items-center bg-muted px-3 border border-r-0 border-input rounded-l-md">
+            r/
+          </div>
+          <Input
+            id="subredditName"
+            className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder="name"
+            value={subredditName}
+            onChange={(e) => setSubredditName(e.target.value)}
+            required
+          />
         </div>
-        <Input
-          id="subredditName"
-          className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
-          placeholder="name"
-          value={subredditName}
-          onChange={(e) => setSubredditName(e.target.value)}
-          required
-        />
+        {error && (
+          <p className="text-sm text-destructive">{error}</p>
+        )}
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Adding..." : "Add Subreddit"}
