@@ -41,8 +41,12 @@ export async function GET(request: Request) {
 
     // Fetch any missing or stale subreddits from Reddit
     const newSubredditsPromises = subredditsToFetch.map(async (name) => {
-      // Use any to bypass the circular reference issue
-      const subredditInfo: any = await (reddit.getSubreddit(name) as any);
+      const subredditInfo = await (reddit.getSubreddit(name).fetch() as Promise<{
+        display_name: string;
+        subscribers: number;
+        public_description?: string;
+        description?: string;
+      }>);
       
       const subredditData = {
         name: subredditInfo.display_name.toLowerCase(),
