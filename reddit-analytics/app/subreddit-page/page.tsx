@@ -231,7 +231,7 @@ export default function SubredditPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h3 className="font-medium text-gray-100">{post.title}</h3>
+                        <h3 className="font-medium text-gray-200">{post.title}</h3>
                         <div className="text-sm text-gray-400 flex items-center gap-3">
                           <span className="flex items-center gap-1">
                             <ArrowUp className="h-4 w-4" />
@@ -319,7 +319,7 @@ export default function SubredditPage() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold">r/{subreddit.name}</h1>
+          <h1 className="text-3xl font-bold text-gray-200">r/{subreddit.name}</h1>
         </div>
         <p className="text-gray-300">{subreddit.description}</p>
       </div>
@@ -365,7 +365,7 @@ export default function SubredditPage() {
                         >
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <h3 className="font-medium text-gray-100">{post.title}</h3>
+                              <h3 className="font-medium text-gray-200">{post.title}</h3>
                               <div className="text-sm text-gray-400 flex items-center gap-3">
                                 <span className="flex items-center gap-1">
                                   <ArrowUp className="h-4 w-4" />
@@ -449,7 +449,7 @@ export default function SubredditPage() {
           
           {selectedTheme && (
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold">{selectedTheme}</h2>
+              <h2 className="text-2xl font-bold text-gray-200">{selectedTheme}</h2>
               {renderPosts(getThemeCategories().find(t => t.name === selectedTheme)?.posts || [])}
             </div>
           )}
