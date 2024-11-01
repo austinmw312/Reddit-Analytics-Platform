@@ -13,10 +13,14 @@ const reddit = new Snoowrap({
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: Record<string, string> }
+) {
   try {
-    const { searchParams } = new URL(request.url)
-    const subredditName = searchParams.get('subreddit')
+    // Use NextURL to parse the request URL
+    const url = new URL(request.url)
+    const subredditName = url.searchParams.get('subreddit')
 
     if (!subredditName) {
       return NextResponse.json(
@@ -118,4 +122,7 @@ export async function GET(request: Request) {
       { status: 500 }
     )
   }
-} 
+}
+
+// Add this to prevent static optimization
+export const dynamic = 'force-dynamic' 

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Reddit Analytics Platform",
-  description: "Analyze subreddits and their posts",
+  title: "Reddit Insights",
+  description: "Analyzesubreddits and their posts.",
 };
 
 export default function RootLayout({
