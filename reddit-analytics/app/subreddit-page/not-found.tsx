@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="flex flex-col items-center justify-center space-y-4">
         <h1 className="text-2xl font-bold">404 - Subreddit Not Found</h1>
         <p className="text-muted-foreground">
-          The subreddit you're looking for doesn't exist.
+          The subreddit you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link href="/">
           <Button>

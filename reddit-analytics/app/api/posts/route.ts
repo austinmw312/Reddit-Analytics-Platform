@@ -35,9 +35,8 @@ export async function GET(request: Request) {
     if (subredditError || !subredditData) {
       throw new Error("Subreddit not found in database")
     }
-
     // Check for cached posts in Supabase
-    const { data: existingPosts, error: postsError } = await supabase
+    const { data: existingPosts } = await supabase
       .from('posts')
       .select('*')
       .eq('subreddit_id', subredditData.id)

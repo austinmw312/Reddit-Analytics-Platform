@@ -80,7 +80,7 @@ export default function SubredditPage() {
         }
         const data = await response.json()
         // Convert string dates to Date objects
-        const postsWithDates = data.map((post: any) => ({
+        const postsWithDates = data.map((post: RedditPost) => ({
           ...post,
           createdAt: new Date(post.createdAt)
         }))

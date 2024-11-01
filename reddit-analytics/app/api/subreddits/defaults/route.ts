@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import Snoowrap from "snoowrap"
 import { supabase } from "@/lib/supabaseClient"
-import { DEFAULT_SUBREDDITS } from "@/lib/default-subreddits"
 import type { Subreddit } from "@/types/subreddit"
 
 const reddit = new Snoowrap({
@@ -27,7 +26,7 @@ export async function GET(request: Request) {
     const requestedSubreddits = subredditsParam.split(',')
 
     // First, try to get requested subreddits from Supabase
-    const { data: existingSubreddits, error: fetchError } = await supabase
+    const { data: existingSubreddits } = await supabase
       .from('subreddits')
       .select('*')
       .in('name', requestedSubreddits)

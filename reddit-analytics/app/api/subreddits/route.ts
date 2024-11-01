@@ -55,9 +55,8 @@ export async function POST(request: Request) {
         created_at: new Date(),
         updated_at: new Date()
       }
-
       // Upsert the data to Supabase
-      const { data: savedSubreddit, error: upsertError } = await supabase
+      const { error: upsertError } = await supabase
         .from('subreddits')
         .upsert(subredditData, {
           onConflict: 'name'
@@ -89,11 +88,10 @@ export async function POST(request: Request) {
         url: newSubreddit.url,
         createdAt: new Date(newSubreddit.created_at)
       }
-
       return NextResponse.json(subreddit)
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Check for Snoowrap's specific error message format
-      if (error?.message?.includes('does not exist')) {
+      if (error instanceof Error && error.message.includes('does not exist')) {
         return NextResponse.json(
           { error: "This subreddit doesn't exist" },
           { status: 404 }
