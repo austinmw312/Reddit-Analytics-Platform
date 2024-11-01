@@ -13,10 +13,7 @@ const reddit = new Snoowrap({
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
-export async function GET(
-  request: Request,
-  { params }: { params: Record<string, string> }
-) {
+export async function GET(request: Request) {
   try {
     // Use NextURL to parse the request URL
     const url = new URL(request.url)
