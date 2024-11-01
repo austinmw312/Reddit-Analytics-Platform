@@ -44,17 +44,24 @@ export async function POST(request: Request) {
 
     // If not found or stale, fetch from Reddit
     try {
-      const subredditInfo = await reddit.getSubreddit(subredditName).fetch()
+      // Get the subreddit info
+      const subredditInfo = await (reddit.getSubreddit(subredditName).fetch() as Promise<{
+        display_name: string;
+        subscribers: number;
+        public_description?: string;
+        description?: string;
+      }>)
 
       // Transform the data
       const subredditData = {
         name: subredditInfo.display_name.toLowerCase(),
         member_count: subredditInfo.subscribers,
-        description: subredditInfo.public_description || subredditInfo.description,
+        description: subredditInfo.public_description || subredditInfo.description || '',
         url: `https://reddit.com/r/${subredditInfo.display_name}`,
         created_at: new Date(),
         updated_at: new Date()
       }
+
       // Upsert the data to Supabase
       const { error: upsertError } = await supabase
         .from('subreddits')

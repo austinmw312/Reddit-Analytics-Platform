@@ -33,9 +33,10 @@ export function getLocalSubreddits(): string[] {
     // Handle the case where the stored data is in the old format (just array of strings)
     if (Array.isArray(subreddits) && typeof subreddits[0] === 'string') {
       const baseTime = Date.now()
-      const updatedSubreddits: LocalSubreddit[] = subreddits.map((name, index) => ({
+      const oldFormat = subreddits as unknown as string[]
+      const updatedSubreddits: LocalSubreddit[] = oldFormat.map((name, index) => ({
         name,
-        addedAt: baseTime + (index * 1000) // Changed to make earlier items appear first
+        addedAt: baseTime + (index * 1000)
       }))
       localStorage.setItem(LOCAL_SUBREDDITS_KEY, JSON.stringify(updatedSubreddits))
       return updatedSubreddits.map(s => s.name)
