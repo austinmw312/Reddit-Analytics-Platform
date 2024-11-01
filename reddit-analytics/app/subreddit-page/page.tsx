@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { Suspense } from "react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft, ExternalLink, ArrowUp, MessageSquare } from "lucide-react"
@@ -20,7 +20,7 @@ import { getLocalSubreddits } from "@/lib/local-subreddits"
 import { LoadingScreen } from "@/components/loading-screen"
 import { Progress } from "@/components/ui/progress"
 
-export default function SubredditPage() {
+function SubredditPageContent() {
   const searchParams = useSearchParams()
   const subredditName = searchParams.get('name')
   const [subreddit, setSubreddit] = useState<Subreddit | null>(null)
@@ -456,5 +456,13 @@ export default function SubredditPage() {
         </TabsContent>
       </Tabs>
     </main>
+  )
+}
+
+export default function SubredditPage() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <SubredditPageContent />
+    </Suspense>
   )
 } 
