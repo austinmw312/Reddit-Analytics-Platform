@@ -246,7 +246,7 @@ export default function SubredditPage() {
                       </div>
                       
                       {analysis && (
-                        <div className="flex flex-wrap gap-1 items-start mt-1">
+                        <div className="flex flex-wrap gap-1 items-start mt-1 justify-end">
                           {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
                           {analysis.isPainPoint && <CategoryLabel category="pain" />}
                           {analysis.isIdea && <CategoryLabel category="idea" />}
@@ -380,7 +380,7 @@ export default function SubredditPage() {
                             </div>
                             
                             {analysis && (
-                              <div className="flex flex-wrap gap-1 items-start mt-1">
+                              <div className="flex flex-wrap gap-1 items-start mt-1 justify-end">
                                 {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
                                 {analysis.isPainPoint && <CategoryLabel category="pain" />}
                                 {analysis.isIdea && <CategoryLabel category="idea" />}

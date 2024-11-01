@@ -64,7 +64,7 @@ export default function Component() {
           ))}
           <AddSubredditCard>
             {(setOpen) => (
-              <DialogContent className="bg-[#1a1a1a] border border-gray-700">
+              <DialogContent className="bg-[#1a1a1a] border border-gray-700 mx-auto left-[50%] translate-x-[-50%] max-w-[calc(100vw-2rem)] w-[500px] rounded-lg">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-bold text-[#f56565]">Add New Subreddit</DialogTitle>
                 </DialogHeader>
