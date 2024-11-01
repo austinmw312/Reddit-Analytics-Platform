@@ -326,7 +326,7 @@ export default function SubredditPage() {
 
       <Tabs defaultValue="posts" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="posts">Top Posts</TabsTrigger>
+          <TabsTrigger value="posts">Top Posts from Past 24 Hours</TabsTrigger>
           <TabsTrigger value="themes">Themes</TabsTrigger>
         </TabsList>
         
