@@ -1,9 +1,11 @@
-import { Spinner } from "@/components/ui/spinner"
-
 export function LoadingScreen() {
   return (
-    <div className="h-screen w-full flex items-center justify-center">
-      <Spinner className="text-muted-foreground" size={32} />
+    <div className="flex items-center justify-center min-h-screen">
+      <div 
+        className="w-8 h-8 border-4 border-t-[#f56565] border-gray-700 rounded-full animate-spin"
+        style={{ borderTopColor: '#f56565' }}
+      >
+      </div>
     </div>
   )
 } 

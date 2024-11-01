@@ -12,29 +12,28 @@ interface SubredditCardProps {
 
 export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
   const handleRemove = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent the Link navigation
+    e.preventDefault()
     onRemove(subreddit.id)
   }
 
-  // Format member count with a fallback to 0 if undefined
   const formattedMemberCount = (subreddit.memberCount ?? 0).toLocaleString()
 
   return (
     <Link href={`/subreddit-page?name=${encodeURIComponent(subreddit.name)}`}>
-      <Card className="hover:bg-accent/50 transition-colors cursor-pointer group">
+      <Card className="hover:bg-[#2e2e2e] transition-colors cursor-pointer group bg-[#1f1f1f] border-gray-700">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-between w-full">
-              <CardTitle>r/{subreddit.name}</CardTitle>
+              <CardTitle className="text-[#f56565]">r/{subreddit.name}</CardTitle>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="flex items-center gap-1">
+                <Badge variant="secondary" className="flex items-center gap-1 bg-[#2a2a2a] text-gray-200">
                   <Users className="h-3 w-3" />
                   {formattedMemberCount}
                 </Badge>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-gray-300 hover:text-gray-100 hover:bg-[#2a2a2a]"
                   onClick={handleRemove}
                 >
                   <X className="h-4 w-4" />
@@ -42,11 +41,11 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
               </div>
             </div>
           </div>
-          <CardDescription className="line-clamp-2">
+          <CardDescription className="line-clamp-2 text-gray-200">
             {subreddit.description}
           </CardDescription>
         </CardHeader>
       </Card>
     </Link>
   )
-} 
+}

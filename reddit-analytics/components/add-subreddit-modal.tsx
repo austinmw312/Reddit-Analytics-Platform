@@ -57,26 +57,32 @@ export function AddSubredditModal({ onSubredditAdded, setOpen }: AddSubredditMod
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <div className="flex">
-          <div className="flex items-center bg-muted px-3 border border-r-0 border-input rounded-l-md">
-            r/
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex">
+            <div className="flex items-center bg-[#1a1a1a] px-3 border border-r-0 border-gray-700 rounded-l-md text-gray-300">
+              r/
+            </div>
+            <Input
+              id="subredditName"
+              className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-[#1a1a1a] border-gray-700 text-gray-100"
+              placeholder="subreddit name"
+              value={subredditName}
+              onChange={(e) => setSubredditName(e.target.value)}
+              required
+            />
           </div>
-          <Input
-            id="subredditName"
-            className="rounded-l-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="name"
-            value={subredditName}
-            onChange={(e) => setSubredditName(e.target.value)}
-            required
-          />
+          {error && (
+            <p className="text-sm text-[#f56565]">{error}</p>
+          )}
         </div>
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
       </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button 
+        type="submit" 
+        className="w-full bg-[#2a2a2a] hover:bg-[#333333] text-gray-100" 
+        disabled={isLoading}
+      >
         {isLoading ? "Adding..." : "Add Subreddit"}
       </Button>
     </form>

@@ -1,32 +1,50 @@
-import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+
+type CategoryType = "solution" | "pain" | "idea" | "advice" | "other"
 
 interface CategoryLabelProps {
-  category: 'solution' | 'pain' | 'idea' | 'advice' | 'other'
+  category: CategoryType
 }
 
 export function CategoryLabel({ category }: CategoryLabelProps) {
-  const styles = {
-    solution: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-    pain: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
-    idea: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-    advice: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-    other: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
+  const getColorClasses = (category: CategoryType) => {
+    switch (category) {
+      case "solution":
+        return "bg-[#2b6cb0] text-gray-100" // Darker blue
+      case "pain":
+        return "bg-[#f56565] text-gray-100" // Keeping your specified red
+      case "idea":
+        return "bg-[#2f855a] text-gray-100" // Darker green
+      case "advice":
+        return "bg-[#6b46c1] text-gray-100" // Darker purple
+      case "other":
+        return "bg-[#4a5568] text-gray-100" // Darker gray
+      default:
+        return "bg-gray-600 text-gray-100"
+    }
   }
 
-  const labels = {
-    solution: "Solution Request",
-    pain: "Pain Point",
-    idea: "New Idea",
-    advice: "Advice Request",
-    other: "Other",
+  const getLabel = (category: CategoryType) => {
+    switch (category) {
+      case "solution":
+        return "Solution Request"
+      case "pain":
+        return "Pain Point"
+      case "idea":
+        return "Idea"
+      case "advice":
+        return "Advice Request"
+      case "other":
+        return "Other"
+    }
   }
 
   return (
-    <span className={cn(
-      "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-      styles[category]
-    )}>
-      {labels[category]}
-    </span>
+    <Badge 
+      variant="secondary" 
+      className={`${getColorClasses(category)} border-none font-medium`}
+    >
+      {getLabel(category)}
+    </Badge>
   )
 } 

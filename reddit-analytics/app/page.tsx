@@ -9,7 +9,7 @@ import type { Subreddit } from "@/types/subreddit"
 import { getLocalSubreddits, addLocalSubreddit, removeLocalSubreddit } from "@/lib/local-subreddits"
 import { LoadingScreen } from "@/components/loading-screen"
 
-export default function Home() {
+export default function Component() {
   const [subreddits, setSubreddits] = useState<Subreddit[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -44,38 +44,39 @@ export default function Home() {
   if (loading) {
     return <LoadingScreen />
   }
-
   return (
-    <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold">Reddit Insights</h1>
-        <p className="text-gray-600 mt-2">Choose a subreddit, and AI will identify solution requests, pain points, and more.</p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {subreddits.map((subreddit) => (
-          <SubredditCard 
-            key={subreddit.id} 
-            subreddit={subreddit} 
-            onRemove={() => {
-              removeLocalSubreddit(subreddit.name)
-              setSubreddits(prev => prev.filter(s => s.id !== subreddit.id))
-            }}
-          />
-        ))}
-        <AddSubredditCard>
-          {(setOpen) => (
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Subreddit</DialogTitle>
-              </DialogHeader>
-              <AddSubredditModal 
-                onSubredditAdded={handleSubredditAdded} 
-                setOpen={setOpen}
-              />
-            </DialogContent>
-          )}
-        </AddSubredditCard>
-      </div>
-    </main>
+    <div className="dark min-h-screen" style={{ backgroundColor: '#1b1b1f' }}>
+      <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold leading-relaxed" style={{ color: '#f56565' }}>Reddit <i>Insights</i></h1>
+          <p className="text-gray-100 mt-2 text-xl">Identify pain points, solution requests, advice requests, and more.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {subreddits.map((subreddit) => (
+            <SubredditCard 
+              key={subreddit.id} 
+              subreddit={subreddit} 
+              onRemove={() => {
+                removeLocalSubreddit(subreddit.name)
+                setSubreddits(prev => prev.filter(s => s.id !== subreddit.id))
+              }}
+            />
+          ))}
+          <AddSubredditCard>
+            {(setOpen) => (
+              <DialogContent className="bg-[#1a1a1a] border border-gray-700">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold text-[#f56565]">Add New Subreddit</DialogTitle>
+                </DialogHeader>
+                <AddSubredditModal 
+                  onSubredditAdded={handleSubredditAdded} 
+                  setOpen={setOpen}
+                />
+              </DialogContent>
+            )}
+          </AddSubredditCard>
+        </div>
+      </main>
+    </div>
   )
 }
