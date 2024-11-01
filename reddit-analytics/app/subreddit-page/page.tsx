@@ -307,7 +307,7 @@ export default function SubredditPage() {
   }
 
   return (
-    <main className="container mx-auto py-8">
+    <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Link href="/">
@@ -317,7 +317,7 @@ export default function SubredditPage() {
           </Link>
           <h1 className="text-3xl font-bold">r/{subreddit.name}</h1>
         </div>
-        <p className="text-muted-foreground">{subreddit.description}</p>
+        <p className="text-gray-300">{subreddit.description}</p>
       </div>
 
       <Tabs defaultValue="posts" className="space-y-4">
