@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import Snoowrap from "snoowrap"
 import type { RedditPost } from "@/types/reddit-post"
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from "@/lib/supabaseClient"
 
 const reddit = new Snoowrap({
   userAgent: process.env.REDDIT_USER_AGENT!,
@@ -10,11 +10,6 @@ const reddit = new Snoowrap({
   username: process.env.REDDIT_USERNAME!,
   password: process.env.REDDIT_PASSWORD!,
 })
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-); 
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
