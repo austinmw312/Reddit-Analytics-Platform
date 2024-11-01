@@ -9,7 +9,7 @@ interface ThemeCardProps {
 
 export function ThemeCard({ theme }: ThemeCardProps) {
   return (
-    <Card className="hover:bg-[#2e2e2e] transition-colors cursor-pointer bg-[#1f1f1f] border-gray-700">
+    <Card className="hover:bg-[#1f1f1f] transition-colors cursor-pointer bg-[#1a1a1a] border-[#2e2e2e]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-gray-100">{theme.name}</CardTitle>

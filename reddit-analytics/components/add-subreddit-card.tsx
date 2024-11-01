@@ -13,7 +13,7 @@ export function AddSubredditCard({ children }: AddSubredditCardProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Card className="p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-[#2e2e2e] transition-colors h-[140px] bg-[#1f1f1f] border-gray-700">
+        <Card className="p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-[#2e2e2e] transition-colors h-[140px] bg-[#1f1f1f] border-[#2e2e2e]">
           <Plus className="h-8 w-8 text-gray-200" />
           <CardTitle className="text-gray-200">Add Subreddit</CardTitle>
         </Card>

@@ -20,7 +20,7 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
 
   return (
     <Link href={`/subreddit-page?name=${encodeURIComponent(subreddit.name)}`}>
-      <Card className="hover:bg-[#2e2e2e] transition-colors cursor-pointer group bg-[#1f1f1f] border-gray-700">
+      <Card className="hover:bg-[#2e2e2e] transition-colors cursor-pointer group bg-[#1f1f1f] border-[#2e2e2e]">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-between w-full">
