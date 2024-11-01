@@ -32,6 +32,7 @@ export default function SubredditPage() {
   const [postAnalysis, setPostAnalysis] = useState<Map<string, PostCategoryAnalysis>>(new Map())
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisProgress, setAnalysisProgress] = useState(0)
+  const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
 
   // Load subreddit data
   useEffect(() => {
@@ -210,6 +211,78 @@ export default function SubredditPage() {
     })
   }
 
+  const renderPosts = (postsToRender: RedditPost[]) => {
+    return (
+      <div className="rounded-lg border">
+        <div className="p-4">
+          <div className="space-y-2">
+            {postsToRender.map(post => {
+              const isExpanded = expandedPosts.has(post.id)
+              const analysis = postAnalysis.get(post.id)
+              
+              return (
+                <div 
+                  key={post.id} 
+                  className="rounded-lg border border-transparent hover:border-border hover:bg-muted/50 transition-colors"
+                >
+                  <div 
+                    className="p-3 cursor-pointer"
+                    onClick={() => togglePost(post.id)}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <h3 className="font-medium">{post.title}</h3>
+                        <div className="text-sm text-muted-foreground flex items-center gap-2">
+                          <span>{post.score} upvotes</span>
+                          <span>•</span>
+                          <span>{post.numComments} comments</span>
+                          <span>•</span>
+                          <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                        </div>
+                      </div>
+                      
+                      {analysis && (
+                        <div className="flex flex-wrap gap-1 items-start mt-1">
+                          {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
+                          {analysis.isPainPoint && <CategoryLabel category="pain" />}
+                          {analysis.isIdea && <CategoryLabel category="idea" />}
+                          {analysis.isAdviceRequest && <CategoryLabel category="advice" />}
+                          {analysis.isOther && <CategoryLabel category="other" />}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {isExpanded && (
+                      <div 
+                        className="mt-3 pt-3 border-t text-sm"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {post.content && (
+                          <div className="whitespace-pre-wrap mb-2">
+                            {post.content}
+                          </div>
+                        )}
+                        <a
+                          href={post.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Open in Reddit
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return <LoadingScreen />
   }
@@ -344,7 +417,7 @@ export default function SubredditPage() {
           </div>
         </TabsContent>
         
-        <TabsContent value="themes" className="space-y-4">
+        <TabsContent value="themes" className="space-y-8">
           {isAnalyzing && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-muted-foreground">
@@ -356,9 +429,22 @@ export default function SubredditPage() {
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {getThemeCategories().map(theme => (
-              <ThemeCard key={theme.name} theme={theme} />
+              <div 
+                key={theme.name}
+                onClick={() => setSelectedTheme(theme.name)}
+                className="cursor-pointer"
+              >
+                <ThemeCard theme={theme} />
+              </div>
             ))}
           </div>
+          
+          {selectedTheme && (
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold">{selectedTheme}</h2>
+              {renderPosts(getThemeCategories().find(t => t.name === selectedTheme)?.posts || [])}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </main>
