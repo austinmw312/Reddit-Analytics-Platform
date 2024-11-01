@@ -3,7 +3,7 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, ExternalLink } from "lucide-react"
+import { ArrowLeft, ExternalLink, ArrowUp, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
@@ -231,13 +231,17 @@ export default function SubredditPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h3 className="font-medium">{post.title}</h3>
-                        <div className="text-sm text-muted-foreground flex items-center gap-2">
-                          <span>{post.score} upvotes</span>
-                          <span>•</span>
-                          <span>{post.numComments} comments</span>
-                          <span>•</span>
-                          <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                        <h3 className="font-medium text-gray-100">{post.title}</h3>
+                        <div className="text-sm text-gray-400 flex items-center gap-3">
+                          <span className="flex items-center gap-1">
+                            <ArrowUp className="h-4 w-4" />
+                            {post.score}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="h-4 w-4" />
+                            {post.numComments}
+                          </span>
+                          <span>{format(post.createdAt, 'MMM d')}</span>
                         </div>
                       </div>
                       
@@ -258,7 +262,7 @@ export default function SubredditPage() {
                         onClick={e => e.stopPropagation()}
                       >
                         {post.content && (
-                          <div className="whitespace-pre-wrap mb-2">
+                          <div className="whitespace-pre-wrap mb-2 text-gray-300">
                             {post.content}
                           </div>
                         )}
@@ -266,7 +270,7 @@ export default function SubredditPage() {
                           href={post.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                          className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
                         >
                           <ExternalLink className="h-3 w-3" />
                           Open in Reddit
@@ -361,13 +365,17 @@ export default function SubredditPage() {
                         >
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <h3 className="font-medium">{post.title}</h3>
-                              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                <span>{post.score} upvotes</span>
-                                <span>•</span>
-                                <span>{post.numComments} comments</span>
-                                <span>•</span>
-                                <span>{format(post.createdAt, 'MMM d, h:mm a')}</span>
+                              <h3 className="font-medium text-gray-100">{post.title}</h3>
+                              <div className="text-sm text-gray-400 flex items-center gap-3">
+                                <span className="flex items-center gap-1">
+                                  <ArrowUp className="h-4 w-4" />
+                                  {post.score}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <MessageSquare className="h-4 w-4" />
+                                  {post.numComments}
+                                </span>
+                                <span>{format(post.createdAt, 'MMM d')}</span>
                               </div>
                             </div>
                             
@@ -388,7 +396,7 @@ export default function SubredditPage() {
                               onClick={e => e.stopPropagation()}
                             >
                               {post.content && (
-                                <div className="whitespace-pre-wrap mb-2">
+                                <div className="whitespace-pre-wrap mb-2 text-gray-300">
                                   {post.content}
                                 </div>
                               )}
@@ -396,7 +404,7 @@ export default function SubredditPage() {
                                 href={post.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                                className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
                               >
                                 <ExternalLink className="h-3 w-3" />
                                 Open in Reddit
