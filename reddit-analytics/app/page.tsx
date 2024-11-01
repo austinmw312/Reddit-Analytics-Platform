@@ -49,7 +49,7 @@ export default function Component() {
       <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="mb-8">
           <h1 className="text-4xl font-bold leading-relaxed" style={{ color: '#f56565' }}>Reddit Insights</h1>
-          <p className="text-gray-100 mt-2 text-xl italic">Categorize posts into pain points, solution requests, advice requests, and more.</p>
+          <p className="text-gray-100 mt-2 text-xl">Fuel startup ideas by identifying pain points, solution requests, and more.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {subreddits.map((subreddit) => (

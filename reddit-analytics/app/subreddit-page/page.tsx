@@ -155,12 +155,12 @@ function SubredditPageContent() {
       },
       {
         name: "Pain Points",
-        description: "Posts expressing pain points or problems",
+        description: "Posts expressing pain points or problems related to a product or service",
         posts: [],
       },
       {
-        name: "Ideas",
-        description: "Posts introducing new ideas or concepts",
+        name: "New Ideas",
+        description: "Posts introducing new business ideas or concepts",
         posts: [],
       },
       {
