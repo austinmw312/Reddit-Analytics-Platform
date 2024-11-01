@@ -155,7 +155,7 @@ function SubredditPageContent() {
       },
       {
         name: "Pain Points",
-        description: "Posts expressing pain points or problems related to a product or service",
+        description: "Posts expressing pain points related to a product or service",
         posts: [],
       },
       {
