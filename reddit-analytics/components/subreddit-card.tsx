@@ -24,7 +24,7 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-between w-full">
-              <CardTitle className="text-[#f56565]">r/{subreddit.name}</CardTitle>
+              <CardTitle className="text-[#BB86FC]">r/{subreddit.name}</CardTitle>
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="flex items-center gap-1 bg-[#2a2a2a] text-gray-200">
                   <Users className="h-3 w-3" />

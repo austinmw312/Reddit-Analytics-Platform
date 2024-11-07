@@ -86,17 +86,6 @@ You are building a Reddit analytics platform where users can view analytics on d
 - Number of Posts: Total posts that fall under the category
 - Interaction: Clicking on a category card opens a side panel displaying all posts belonging to that category
 
-### 5. Manage Categories
-
-#### 5.1 Add New Category
-
-**Action**: Users can add new theme categories.
-
-**Process**:
-
-- Opens a modal with a form to input the category name and description
-- Upon adding, the theme analysis process re-runs to include the new category
-
 ## File Structure
 
 ```
