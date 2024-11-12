@@ -1,3 +1,5 @@
+import { DEFAULT_SUBREDDITS } from './default-subreddits'
+
 const LOCAL_SUBREDDITS_KEY = 'local-subreddits'
 
 interface LocalSubreddit {
@@ -10,18 +12,11 @@ export function getLocalSubreddits(): string[] {
   
   const stored = localStorage.getItem(LOCAL_SUBREDDITS_KEY)
   if (!stored) {
-    // Initialize with default subreddits, each added 1 second after the previous
-    // This ensures they maintain a consistent order
+    // Initialize with default subreddits from the imported constant
     const baseTime = Date.now()
-    const defaults: LocalSubreddit[] = [
-      'cscareerquestions', 
-      'openai', 
-      'startups', 
-      'machinelearning', 
-      'webdev'
-    ].map((name, index) => ({
+    const defaults: LocalSubreddit[] = DEFAULT_SUBREDDITS.map((name, index) => ({
       name,
-      addedAt: baseTime + (index * 1000) // Changed to make earlier items appear first
+      addedAt: baseTime + (index * 1000)
     }))
     localStorage.setItem(LOCAL_SUBREDDITS_KEY, JSON.stringify(defaults))
     return defaults.map(s => s.name)
