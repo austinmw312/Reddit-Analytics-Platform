@@ -339,7 +339,10 @@ function SubredditPageContent() {
                 <span>Analyzing posts...</span>
                 <span>{Math.round(analysisProgress)}%</span>
               </div>
-              <Progress value={analysisProgress} className="bg-gray-100" indicatorClassName="bg-[#ff4600]" />
+              <Progress 
+                value={analysisProgress} 
+                className="bg-gray-100 [&>div]:bg-[#ff4600]"
+              />
             </div>
           )}
           <div className="rounded-lg border border-gray-200 bg-white">
@@ -370,7 +373,10 @@ function SubredditPageContent() {
                 <span>Analyzing posts...</span>
                 <span>{Math.round(analysisProgress)}%</span>
               </div>
-              <Progress value={analysisProgress} className="bg-gray-100" indicatorClassName="bg-[#ff4600]" />
+              <Progress 
+                value={analysisProgress} 
+                className="bg-gray-100 [&>div]:bg-[#ff4600]"
+              />
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

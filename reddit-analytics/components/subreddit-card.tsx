@@ -1,5 +1,4 @@
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Users, X } from "lucide-react"
 import Link from "next/link"
 import type { Subreddit } from "@/types/subreddit"
