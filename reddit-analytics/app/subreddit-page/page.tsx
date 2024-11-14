@@ -213,75 +213,73 @@ function SubredditPageContent() {
 
   const renderPosts = (postsToRender: RedditPost[]) => {
     return (
-      <div className="rounded-lg border">
-        <div className="p-4">
-          <div className="space-y-2">
-            {postsToRender.map(post => {
-              const isExpanded = expandedPosts.has(post.id)
-              const analysis = postAnalysis.get(post.id)
-              
-              return (
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="space-y-2">
+          {postsToRender.map(post => {
+            const isExpanded = expandedPosts.has(post.id)
+            const analysis = postAnalysis.get(post.id)
+            
+            return (
+              <div 
+                key={post.id} 
+                className="rounded-lg border-transparent border hover:border-gray-200 hover:bg-gray-50 transition-colors"
+              >
                 <div 
-                  key={post.id} 
-                  className="rounded-lg border border-transparent hover:border-border hover:bg-muted/50 transition-colors"
+                  className="p-3 cursor-pointer"
+                  onClick={() => togglePost(post.id)}
                 >
-                  <div 
-                    className="p-3 cursor-pointer"
-                    onClick={() => togglePost(post.id)}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-200">{post.title}</h3>
-                        <div className="text-sm text-gray-400 flex items-center gap-3">
-                          <span className="flex items-center gap-1">
-                            <ArrowUp className="h-4 w-4" />
-                            {post.score}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MessageSquare className="h-4 w-4" />
-                            {post.numComments}
-                          </span>
-                          <span>{format(post.createdAt, 'MMM d')}</span>
-                        </div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900">{post.title}</h3>
+                      <div className="text-sm text-gray-600 flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <ArrowUp className="h-4 w-4" />
+                          {post.score}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="h-4 w-4" />
+                          {post.numComments}
+                        </span>
+                        <span>{format(post.createdAt, 'MMM d')}</span>
                       </div>
-                      
-                      {analysis && (
-                        <div className="flex flex-wrap gap-1 items-start mt-1 justify-end">
-                          {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
-                          {analysis.isPainPoint && <CategoryLabel category="pain" />}
-                          {analysis.isIdea && <CategoryLabel category="idea" />}
-                          {analysis.isAdviceRequest && <CategoryLabel category="advice" />}
-                          {analysis.isOther && <CategoryLabel category="other" />}
-                        </div>
-                      )}
                     </div>
                     
-                    {isExpanded && (
-                      <div 
-                        className="mt-3 pt-3 border-t text-sm"
-                        onClick={e => e.stopPropagation()}
-                      >
-                        {post.content && (
-                          <div className="whitespace-pre-wrap mb-2 text-gray-300">
-                            {post.content}
-                          </div>
-                        )}
-                        <a
-                          href={post.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          Open in Reddit
-                        </a>
+                    {analysis && (
+                      <div className="flex flex-wrap gap-1 items-start mt-1 justify-end">
+                        {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
+                        {analysis.isPainPoint && <CategoryLabel category="pain" />}
+                        {analysis.isIdea && <CategoryLabel category="idea" />}
+                        {analysis.isAdviceRequest && <CategoryLabel category="advice" />}
+                        {analysis.isOther && <CategoryLabel category="other" />}
                       </div>
                     )}
                   </div>
+                  
+                  {isExpanded && (
+                    <div 
+                      className="mt-3 pt-3 border-t border-gray-200 text-sm"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      {post.content && (
+                        <div className="whitespace-pre-wrap mb-2 text-gray-600">
+                          {post.content}
+                        </div>
+                      )}
+                      <a
+                        href={post.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Open in Reddit
+                      </a>
+                    </div>
+                  )}
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     )
@@ -315,109 +313,49 @@ function SubredditPageContent() {
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Link href="/">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-200">r/{subreddit.name}</h1>
+          <h1 className="text-3xl font-bold text-[#ff4600]">r/{subreddit.name}</h1>
         </div>
-        <p className="text-gray-300">{subreddit.description}</p>
+        <p className="text-gray-600">{subreddit.description}</p>
       </div>
 
       <Tabs defaultValue="posts" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="posts">Top Posts from Past 24 Hours</TabsTrigger>
-          <TabsTrigger value="themes">Themes</TabsTrigger>
+        <TabsList className="bg-gray-100 text-gray-600">
+          <TabsTrigger value="posts" className="data-[state=active]:bg-white data-[state=active]:text-gray-900">
+            Top Posts from Past 24 Hours
+          </TabsTrigger>
+          <TabsTrigger value="themes" className="data-[state=active]:bg-white data-[state=active]:text-gray-900">
+            Themes
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="posts" className="space-y-4">
           {isAnalyzing && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-muted-foreground">
+              <div className="flex justify-between text-sm text-gray-600">
                 <span>Analyzing posts...</span>
                 <span>{Math.round(analysisProgress)}%</span>
               </div>
-              <Progress value={analysisProgress} />
+              <Progress value={analysisProgress} className="bg-gray-100" indicatorClassName="bg-[#ff4600]" />
             </div>
           )}
-          <div className="rounded-lg border">
+          <div className="rounded-lg border border-gray-200 bg-white">
             <div className="p-4">
               {isLoadingPosts ? (
                 <div className="space-y-4">
-                  <div className="animate-pulse h-4 bg-muted rounded w-3/4" />
-                  <div className="animate-pulse h-4 bg-muted rounded w-1/2" />
-                  <div className="animate-pulse h-4 bg-muted rounded w-2/3" />
+                  <div className="animate-pulse h-4 bg-gray-100 rounded w-3/4" />
+                  <div className="animate-pulse h-4 bg-gray-100 rounded w-1/2" />
+                  <div className="animate-pulse h-4 bg-gray-100 rounded w-2/3" />
                 </div>
               ) : sortedPosts.length > 0 ? (
                 <div className="space-y-2">
-                  {sortedPosts.map(post => {
-                    const isExpanded = expandedPosts.has(post.id)
-                    const analysis = postAnalysis.get(post.id)
-                    
-                    return (
-                      <div 
-                        key={post.id} 
-                        className="rounded-lg border border-transparent hover:border-border hover:bg-muted/50 transition-colors"
-                      >
-                        <div 
-                          className="p-3 cursor-pointer"
-                          onClick={() => togglePost(post.id)}
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <h3 className="font-medium text-gray-200">{post.title}</h3>
-                              <div className="text-sm text-gray-400 flex items-center gap-3">
-                                <span className="flex items-center gap-1">
-                                  <ArrowUp className="h-4 w-4" />
-                                  {post.score}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <MessageSquare className="h-4 w-4" />
-                                  {post.numComments}
-                                </span>
-                                <span>{format(post.createdAt, 'MMM d')}</span>
-                              </div>
-                            </div>
-                            
-                            {analysis && (
-                              <div className="flex flex-wrap gap-1 items-start mt-1 justify-end">
-                                {analysis.isSolutionRequest && <CategoryLabel category="solution" />}
-                                {analysis.isPainPoint && <CategoryLabel category="pain" />}
-                                {analysis.isIdea && <CategoryLabel category="idea" />}
-                                {analysis.isAdviceRequest && <CategoryLabel category="advice" />}
-                                {analysis.isOther && <CategoryLabel category="other" />}
-                              </div>
-                            )}
-                          </div>
-                          
-                          {isExpanded && (
-                            <div 
-                              className="mt-3 pt-3 border-t text-sm"
-                              onClick={e => e.stopPropagation()}
-                            >
-                              {post.content && (
-                                <div className="whitespace-pre-wrap mb-2 text-gray-300">
-                                  {post.content}
-                                </div>
-                              )}
-                              <a
-                                href={post.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-200"
-                              >
-                                <ExternalLink className="h-3 w-3" />
-                                Open in Reddit
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
+                  {renderPosts(sortedPosts)}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-600">
                   No posts found from the past 24 hours.
                 </p>
               )}
@@ -428,11 +366,11 @@ function SubredditPageContent() {
         <TabsContent value="themes" className="space-y-8">
           {isAnalyzing && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-muted-foreground">
+              <div className="flex justify-between text-sm text-gray-600">
                 <span>Analyzing posts...</span>
                 <span>{Math.round(analysisProgress)}%</span>
               </div>
-              <Progress value={analysisProgress} />
+              <Progress value={analysisProgress} className="bg-gray-100" indicatorClassName="bg-[#ff4600]" />
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -449,7 +387,7 @@ function SubredditPageContent() {
           
           {selectedTheme && (
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-200">{selectedTheme}</h2>
+              <h2 className="text-2xl font-bold text-[#ff4600]">{selectedTheme}</h2>
               {renderPosts(getThemeCategories().find(t => t.name === selectedTheme)?.posts || [])}
             </div>
           )}
@@ -462,7 +400,9 @@ function SubredditPageContent() {
 export default function SubredditPage() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <SubredditPageContent />
+      <div className="bg-white min-h-screen">
+        <SubredditPageContent />
+      </div>
     </Suspense>
   )
 } 

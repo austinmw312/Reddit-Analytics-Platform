@@ -1,7 +1,6 @@
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import type { ThemeCategory } from "@/types/theme"
 import { FileText } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 
 interface ThemeCardProps {
   theme: ThemeCategory
@@ -9,16 +8,16 @@ interface ThemeCardProps {
 
 export function ThemeCard({ theme }: ThemeCardProps) {
   return (
-    <Card className="hover:bg-[#1f1f1f] transition-colors cursor-pointer bg-[#1a1a1a] border-[#2e2e2e]">
+    <Card className="hover:bg-gray-50 transition-colors cursor-pointer bg-white border-gray-200">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-gray-200">{theme.name}</CardTitle>
-          <Badge variant="secondary" className="flex items-center gap-1 bg-[#2a2a2a] text-gray-200">
+          <CardTitle className="text-[#ff4600]">{theme.name}</CardTitle>
+          <div className="flex items-center gap-1 bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full text-xs font-medium">
             <FileText className="h-3 w-3" />
             {theme.posts.length} posts
-          </Badge>
+          </div>
         </div>
-        <CardDescription className="text-gray-200">
+        <CardDescription className="text-gray-600">
           {theme.description}
         </CardDescription>
       </CardHeader>

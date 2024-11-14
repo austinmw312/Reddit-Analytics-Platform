@@ -45,11 +45,11 @@ export default function Component() {
     return <LoadingScreen />
   }
   return (
-    <div className="dark min-h-screen" style={{ backgroundColor: '#121212' }}>
+    <div className="dark min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       <main className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold leading-relaxed" style={{ color: '#BB86FC' }}>Reddit Insights</h1>
-          <p className="text-gray-100 mt-2 text-xl">Fuel startup ideas by identifying pain points, solution requests, and more.</p>
+          <h1 className="text-4xl font-bold leading-relaxed" style={{ color: '#ff4600' }}>Reddit Insights</h1>
+          <p className="mt-2 text-xl" style={{ color: '#333333' }}>Fuel startup ideas by identifying pain points, solution requests, and more.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {subreddits.map((subreddit) => (
@@ -64,9 +64,9 @@ export default function Component() {
           ))}
           <AddSubredditCard>
             {(setOpen) => (
-              <DialogContent className="bg-[#1a1a1a] border-[#2e2e2e] mx-auto left-[50%] translate-x-[-50%] max-w-[calc(100vw-2rem)] w-[500px] rounded-lg">
+              <DialogContent className="bg-white border-gray-200 mx-auto left-[50%] translate-x-[-50%] max-w-[calc(100vw-2rem)] w-[500px] rounded-lg [&>button]:text-gray-500 [&>button]:hover:text-gray-700">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl font-bold text-[#BB86FC]">Add New Subreddit</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold text-[#ff4600]">Add New Subreddit</DialogTitle>
                 </DialogHeader>
                 <AddSubredditModal 
                   onSubredditAdded={handleSubredditAdded} 

@@ -20,20 +20,20 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
 
   return (
     <Link href={`/subreddit-page?name=${encodeURIComponent(subreddit.name)}`}>
-      <Card className="hover:bg-[#2e2e2e] transition-colors cursor-pointer group bg-[#1f1f1f] border-[#2e2e2e]">
+      <Card className="hover:bg-gray-50 transition-colors cursor-pointer group bg-white border-gray-200">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-between w-full">
-              <CardTitle className="text-[#BB86FC]">r/{subreddit.name}</CardTitle>
+              <CardTitle className="text-[#ff4600]">r/{subreddit.name}</CardTitle>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="flex items-center gap-1 bg-[#2a2a2a] text-gray-200">
+                <div className="flex items-center gap-1 bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full text-xs font-medium">
                   <Users className="h-3 w-3" />
                   {formattedMemberCount}
-                </Badge>
+                </div>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-gray-300 hover:text-gray-100 hover:bg-[#2a2a2a]"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                   onClick={handleRemove}
                 >
                   <X className="h-4 w-4" />
@@ -41,7 +41,7 @@ export function SubredditCard({ subreddit, onRemove }: SubredditCardProps) {
               </div>
             </div>
           </div>
-          <CardDescription className="line-clamp-2 text-gray-200">
+          <CardDescription className="line-clamp-2 text-gray-600">
             {subreddit.description}
           </CardDescription>
         </CardHeader>
