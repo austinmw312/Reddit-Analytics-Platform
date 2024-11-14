@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Reddit Insights",
-  description: "Analyzesubreddits and their posts.",
+  description: "Analyze subreddits and their posts.",
 };
 
 export default function RootLayout({
